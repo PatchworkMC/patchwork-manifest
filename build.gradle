@@ -1,0 +1,71 @@
+apply plugin: 'checkstyle'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+version = '0.1.0'
+
+def ENV = System.getenv()
+if (ENV.BUILD_NUMBER) {
+	version = version + "." + "${System.getenv().BUILD_NUMBER}"
+}
+
+group = 'com.patchworkmc'
+archivesBaseName = 'patchwork-manifest'
+
+repositories {
+	mavenCentral()
+	maven {
+		name = 'Fabric'
+		url = 'http://maven.modmuss50.me/'
+	}
+}
+
+dependencies {
+	implementation 'com.electronwill.night-config:toml:3.6.0'
+
+	implementation 'com.google.code.gson:gson:2.8.5'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId 'com.patchworkmc'
+			artifactId "patchwork-manifest"
+			version version
+
+			artifact (jar)
+			artifact (sourcesJar)
+		}
+	}
+}
+
+application {
+	mainClassName "com.patchworkmc.manifest.Main"
+}
+
+checkstyle {
+	configFile = rootProject.file("checkstyle.xml")
+	toolVersion = '8.25'
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+def runDir = file("run")
+
+if(!runDir.exists() && !runDir.mkdirs()) {
+	throw new IOException("Failed to create run directory ${runDir.getAbsolutePath()}")
+}
+
+run {
+	workingDir runDir
+}
