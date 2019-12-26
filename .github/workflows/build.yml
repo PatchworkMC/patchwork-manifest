@@ -14,8 +14,8 @@ jobs:
     - uses: eskatos/gradle-command-action@v1
       with:
         arguments: build -x checkstyleMain
-      env:
-        git_version_name: $(git rev-parse --short "$GITHUB_SHA")
+        env:
+          git_version_name: $(git rev-parse --short "$GITHUB_SHA")
   checkstyle:
     runs-on: ubuntu-latest
     steps:
@@ -26,4 +26,4 @@ jobs:
     - uses: eskatos/gradle-command-action@v1
       with:
         arguments: check
-        
+

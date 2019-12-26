@@ -7,17 +7,18 @@ plugins {
 	id 'com.jfrog.bintray' version '1.8.4'
 }
 sourceCompatibility = 1.8
-version = "LOCAL"
 
 def ENV = System.getenv()
-if(ENV.git_ref_name) {
-	def refName = System.getenv("git_ref_name")
+if(ENV.git_version_name) {
+	def versionName = System.getenv("git_version_name")
 	if(ENV.bintray_user && ENV.bintray_key) {
-		if(refName.startsWith("v")) {
-			refName = refName.substring(1) //strip "v" in "v1.0.0" etc.
+		if(versionName.startsWith("v")) {
+			versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
 		}
 	}
-	version = refName
+	version = versionName
+} else {
+	version = "LOCAL"
 }
 
 group = 'com.patchworkmc'
