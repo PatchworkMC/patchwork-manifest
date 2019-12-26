@@ -1,9 +1,11 @@
-apply plugin: 'checkstyle'
-apply plugin: 'application'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-
+plugins {
+	id 'checkstyle'
+	id 'application'
+	id 'eclipse'
+	id 'idea'
+	id 'maven-publish'
+	id 'com.jfrog.bintray' version '1.8.4'
+}
 sourceCompatibility = 1.8
 version = '0.1.0'
 
@@ -14,15 +16,9 @@ if (ENV.BUILD_NUMBER) {
 
 group = 'com.patchworkmc'
 archivesBaseName = 'patchwork-manifest'
-
 repositories {
 	mavenCentral()
-	maven {
-		name = 'Fabric'
-		url = 'http://maven.modmuss50.me/'
-	}
 }
-
 dependencies {
 	implementation 'com.electronwill.night-config:toml:3.6.0'
 
@@ -68,4 +64,91 @@ if(!runDir.exists() && !runDir.mkdirs()) {
 
 run {
 	workingDir runDir
+}
+bintray {
+	user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : System.getenv('bintray_user')
+	key = project.hasProperty('bintrayKey') ? project.getProperty('bintrayKey') : System.getenv('bintray_key')
+	publish = true
+	override = true
+	publications = ['mavenJava']
+	pkg {
+		repo = project.bintrayRepo
+		name = project.name
+		user = bintray.user
+		userOrg = project.repoOwner
+		licenses = [project.codeLicense]
+		desc = project.description
+		websiteUrl = "https://github.com/${project.repoOwner}/${project.repoName}"
+		issueTrackerUrl = "https://github.com/${project.repoOwner}/${project.repoName}/issues"
+		vcsUrl = "https://github.com/${project.repoOwner}/${project.repoName}.git"
+		publicDownloadNumbers = true
+
+		githubRepo = "${project.repoOwner}/${project.repoName}"
+		version {
+			name = project.version
+			released = new Date()
+			//vscTag = '' //TODO
+		}
+	}
+}
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			pom {
+				name = project.name
+				description = project.description
+				url = "https://github.com/${project.repoOwner}/${project.repoName}"
+				licenses {
+					license {
+						name = project.codeLicense
+					}
+				}
+
+				scm {
+					url = "https://github.com/${project.repoOwner}/${project.repoName}"
+				}
+			}
+
+			// add all the jars that should be included when publishing to maven
+			afterEvaluate {
+				artifact jar
+				artifact sourcesJar
+			}
+		}
+	}
+
+//	if (!isNullOrEmpty(System.getenv('GITHUB_OAUTH_TOKEN'))) {
+//		publications {
+//			mavenGitHub(MavenPublication) {
+//				pom {
+//					name = project.name
+//					description = project.description
+//					url = "https://github.com/${project.repoOwner}/${project.repoName}"
+//					licenses {
+//						license {
+//							name = project.codeLicense
+//						}
+//					}
+//
+//					scm {
+//						url = "https://github.com/${project.repoOwner}/${project.repoName}"
+//					}
+//				}
+//
+//				// add all the jars that should be included when publishing to maven
+//				artifact remapJar
+//			}
+//		}
+//		// select the repositories you want to publish to
+//		repositories {
+//			maven {
+//				name = "GitHub"
+//				url = uri("https://maven.pkg.github.com/${project.repoOwner}/${project.repoName}")
+//				credentials {
+//					username = "${project.githubPackagePublisher}"
+//					password = System.getenv('GITHUB_OAUTH_TOKEN')
+//				}
+//			}
+//		}
+//	}
 }

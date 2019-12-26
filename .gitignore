@@ -5,3 +5,5 @@ data/
 build
 .gradle
 run/
+# TODO REMOVE ME
+gradle.properties
