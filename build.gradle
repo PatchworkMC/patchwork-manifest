@@ -17,9 +17,9 @@ if(ENV.bintray_user && ENV.bintray_key) {
 	if(versionName.startsWith("v")) {
 		versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
 	}
+	version = versionName
 } else if(ENV.GITHUB_SHA) {
 	version = System.getenv("GITHUB_SHA").substring(0, 9)
-	System.out.println(version)
 } else {
 	version = 'LOCAL'
 }
