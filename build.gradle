@@ -9,21 +9,18 @@ plugins {
 sourceCompatibility = 1.8
 
 def ENV = System.getenv()
-if(ENV.git_version_name) {
-	def versionName = System.getenv("git_version_name")
+
+def versionName = System.getenv("git_version_name")
+if(ENV.bintray_user && ENV.bintray_key) {
+	versionName = System.getenv("GITHUB_REF")
+	versionName = versionName.substring(versionName.indexOf("refs/tags/"))
 	System.out.println(versionName)
-	if(ENV.bintray_user && ENV.bintray_key) {
-		versionName = versionName.substring(versionName.indexOf("refs/tags/"))
+	if(versionName.startsWith("v")) {
+		versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
 		System.out.println(versionName)
-		if(versionName.startsWith("v")) {
-			versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
-			System.out.println(versionName)
-		}
 	}
-	version = versionName
-} else {
-	version = "LOCAL"
 }
+version = versionName
 
 group = 'com.patchworkmc'
 archivesBaseName = 'patchwork-manifest'
