@@ -13,8 +13,7 @@ def ENV = System.getenv()
 def versionName = System.getenv("git_version_name")
 if(ENV.bintray_user && ENV.bintray_key) {
 	versionName = System.getenv("GITHUB_REF")
-	def index = versionName.lastIndexOf("refs/tags/")
-	versionName = versionName.substring(index + 1)
+	versionName = versionName.substring(10)
 	if(versionName.startsWith("v")) {
 		versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
 		System.out.println(versionName)
