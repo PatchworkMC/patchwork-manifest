@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.patchworkmc.manifest.api.Remapper;
+import com.patchworkmc.manifest.mod.ManifestParseException;
 
 public class AccessTransformerList {
 	private List<AccessTransformerEntry> entries;
@@ -15,7 +16,7 @@ public class AccessTransformerList {
 		this.entries = entries;
 	}
 
-	public static AccessTransformerList parse(Path accessTransformer) {
+	public static AccessTransformerList parse(Path accessTransformer) throws ManifestParseException {
 		List<String> lines;
 
 		try {
@@ -30,43 +31,39 @@ public class AccessTransformerList {
 
 		// ATs are formatted like this:
 		// public-f com/example/Foo bar # mars
-		// We can make everything public and definalized and let the mod just live in its own world,
-		// so we only use the 2nd and 3rd words.
+		// We can make everything public and definalized and let the mod just live in its own world
 		for (String line : lines) {
-			// Put everything into the map. Changes package "." to folder "/".
-			// regex.
-			String[] split = line.replaceAll("\\.", "/").split(" ");
-
-			// If the line is at least two words AND none of those words contains a comment
-			// symbol
-			if (split.length < 2) {
+			//Get everything before a comment and throw the rest away
+			if (line.isEmpty() || line.startsWith("#")) {
 				continue;
 			}
 
-			String combined = (split[0] + split[1] + getOrEmpty(split, 2));
+			int index = line.indexOf('#');
 
-			if (!combined.contains("#")) {
-				// if it's only two words and not three we've got a class modifier
-				if (getOrEmpty(split, 2).equals("") || getOrEmpty(split, 2).contains("#")) {
-					throw new UnsupportedOperationException(combined + ": Transforming classes is unsupported");
-					// note: we know that index 2 is part of the AT and not a comment from above
-				} else if (combined.contains("*")) {
-					throw new UnsupportedOperationException(combined + ": Wildcards are unsupported");
-				}
-
-				entries.add(new AccessTransformerEntry(split[1], split[2]));
+			if (index != -1) {
+				line = line.substring(0, index).trim();
 			}
+
+			if (line.contains("*")) {
+				throw new UnsupportedOperationException("Wildcards are not supported");
+			}
+
+			String[] words = line.replace("\\", "/").split(" ");
+			switch (words.length) {
+			// public-f com/example/Foo (class)
+			case 2:
+				throw new UnsupportedOperationException("Classes are not supported");
+			// public-f com/example/Foo bar (member)
+			case 3:
+				entries.add(new AccessTransformerEntry(words[1], words[2]));
+				break;
+			default:
+				throw new ManifestParseException("access transformer line had too few/too many parts: expects 2/3/4, got " + words.length);
+			}
+
 		}
 
 		return new AccessTransformerList(entries);
-	}
-
-	private static String getOrEmpty(String[] array, int index) {
-		try {
-			return array[index];
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			return "";
-		}
 	}
 
 	public List<AccessTransformerEntry> getEntries() {
