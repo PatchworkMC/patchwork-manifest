@@ -2,8 +2,6 @@ name: Java CI
 
 on:
   push:
-env:
-  git_version_name: $(git rev-parse --short "$GITHUB_SHA")
 jobs:
   build:
     runs-on: ubuntu-latest
