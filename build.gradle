@@ -10,16 +10,21 @@ sourceCompatibility = 1.8
 
 def ENV = System.getenv()
 
-def versionName = System.getenv("git_version_name")
+
 if(ENV.bintray_user && ENV.bintray_key) {
-	versionName = System.getenv("GITHUB_REF")
+	def versionName = System.getenv("GITHUB_REF")
 	versionName = versionName.substring(10)
 	if(versionName.startsWith("v")) {
 		versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
-		System.out.println(versionName)
 	}
+} else if(ENV.git_version_name) {
+
+	version = System.getenv("git_version_name")
+	System.out.println(version)
+} else {
+	version = 'LOCAL'
 }
-version = versionName
+
 
 group = 'com.patchworkmc'
 archivesBaseName = 'patchwork-manifest'
