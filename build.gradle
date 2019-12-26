@@ -91,6 +91,7 @@ bintray {
 		}
 	}
 }
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
