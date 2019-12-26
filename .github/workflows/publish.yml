@@ -6,7 +6,7 @@ on:
 env:
   bintray_user: ${{ secrets.bintray_user }}
   bintray_key: ${{ secrets.bintray_key }}
-  git_version_name: ${GITHUB_REF##*/}
+  git_version_name: ${{GITHUB_REF##*/}}
 
 jobs:
   bintray:
