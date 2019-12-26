@@ -12,6 +12,7 @@ def ENV = System.getenv()
 if(ENV.git_version_name) {
 	def versionName = System.getenv("git_version_name")
 	if(ENV.bintray_user && ENV.bintray_key) {
+		versionName = versionName.substring(1); // strip '/' in '/v1.0.0' etc.
 		if(versionName.startsWith("v")) {
 			versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
 		}
