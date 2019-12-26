@@ -37,14 +37,36 @@ public class AccessTransformerList {
 			// regex.
 			String[] split = line.replaceAll("\\.", "/").split(" ");
 
-			// If the line is at least three words AND none of those words contains a comment
+			// If the line is at least two words AND none of those words contains a comment
 			// symbol
-			if (!(split.length < 3 || (split[0] + split[1] + split[2]).contains("#"))) {
+			if (split.length < 2) {
+				continue;
+			}
+
+			String combined = (split[0] + split[1] + getOrEmpty(split, 2));
+
+			if (!combined.contains("#")) {
+				// if it's only two words and not three we've got a class modifier
+				if (getOrEmpty(split, 2).equals("") || getOrEmpty(split, 2).contains("#")) {
+					throw new UnsupportedOperationException(combined + ": Transforming classes is unsupported");
+					// note: we know that index 2 is part of the AT and not a comment from above
+				} else if (combined.contains("*")) {
+					throw new UnsupportedOperationException(combined + ": Wildcards are unsupported");
+				}
+
 				entries.add(new AccessTransformerEntry(split[1], split[2]));
 			}
 		}
 
 		return new AccessTransformerList(entries);
+	}
+
+	private static String getOrEmpty(String[] array, int index) {
+		try {
+			return array[index];
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			return "";
+		}
 	}
 
 	public List<AccessTransformerEntry> getEntries() {

@@ -3,20 +3,20 @@ package com.patchworkmc.manifest.accesstransformer;
 import com.patchworkmc.manifest.api.Remapper;
 
 public class AccessTransformerEntry {
-	private String clazzName;
+	private String className;
 	private String memberName;
-	private String memberDescription = "";
-	private boolean memberIsField;
+	private String descriptor = "";
+	private boolean isField;
 
-	public AccessTransformerEntry(String clazzName, String memberName) {
-		this.clazzName = clazzName;
+	public AccessTransformerEntry(String className, String memberName) {
+		this.className = className;
 		this.memberName = memberName;
-		this.memberIsField = !memberName.contains("(");
+		this.isField = !memberName.contains("(");
 
-		if (!this.memberIsField) {
+		if (!this.isField) {
 			int split = memberName.indexOf('(');
 			memberName = memberName.substring(0, split);
-			this.memberDescription = this.memberName.substring(split);
+			this.descriptor = this.memberName.substring(split);
 		}
 
 		this.memberName = memberName;
@@ -25,31 +25,31 @@ public class AccessTransformerEntry {
 	public AccessTransformerEntry remap(Remapper remapper) {
 		String mappedMemberName;
 
-		if (this.memberIsField) {
-			mappedMemberName = remapper.remapFieldName(this.clazzName, this.memberName, "");
+		if (this.isField) {
+			mappedMemberName = remapper.remapFieldName(this.className, this.memberName, "");
 		} else {
-			mappedMemberName = remapper.remapMethodName(this.clazzName, this.memberName, this.memberDescription);
-			this.memberDescription = remapper.remapMemberDescription(memberDescription);
+			mappedMemberName = remapper.remapMethodName(this.className, this.memberName, this.descriptor);
+			this.descriptor = remapper.remapMemberDescription(descriptor);
 		}
 
-		this.clazzName = remapper.remapClassName(this.clazzName);
+		this.className = remapper.remapClassName(this.className);
 		this.memberName = mappedMemberName;
 		return this;
 	}
 
 	public String getClassName() {
-		return this.clazzName;
+		return this.className;
 	}
 
 	public String getMemberName() {
 		return this.memberName;
 	}
 
-	public boolean memberIsField() {
-		return this.memberIsField;
+	public boolean isField() {
+		return this.isField;
 	}
 
-	public String getMemberDescription() {
-		return this.memberDescription;
+	public String getDescriptor() {
+		return this.descriptor;
 	}
 }
