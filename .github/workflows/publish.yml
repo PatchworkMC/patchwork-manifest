@@ -17,3 +17,4 @@ jobs:
       env: # Or as an environment variable
        bintray_user: ${{ secrets.bintray_user }}
        bintray_key: ${{ secrets.bintray_key }}
+       git_version_name: ${GITHUB_REF##*/}
