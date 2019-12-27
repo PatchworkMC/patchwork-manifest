@@ -60,7 +60,6 @@ public class AccessTransformerList {
 			default:
 				throw new ManifestParseException("access transformer line had too few/too many parts: expects 2/3/4, got " + words.length);
 			}
-
 		}
 
 		return new AccessTransformerList(entries);
