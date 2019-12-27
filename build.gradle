@@ -10,20 +10,18 @@ sourceCompatibility = 1.8
 
 def ENV = System.getenv()
 
-
-if(ENV.bintray_user && ENV.bintray_key) {
+if (ENV.bintray_user && ENV.bintray_key) {
 	def versionName = System.getenv("GITHUB_REF")
 	versionName = versionName.substring(10)
-	if(versionName.startsWith("v")) {
+	if (versionName.startsWith("v")) {
 		versionName = versionName.substring(1) //strip "v" in "v1.0.0" etc.
 	}
 	version = versionName
-} else if(ENV.GITHUB_SHA) {
+} else if (ENV.GITHUB_SHA) {
 	version = System.getenv("GITHUB_SHA").substring(0, 9)
 } else {
 	version = 'LOCAL'
 }
-
 
 group = 'com.patchworkmc'
 archivesBaseName = 'patchwork-manifest'
@@ -48,8 +46,8 @@ publishing {
 			artifactId "patchwork-manifest"
 			version version
 
-			artifact (jar)
-			artifact (sourcesJar)
+			artifact(jar)
+			artifact(sourcesJar)
 		}
 	}
 }
@@ -69,7 +67,7 @@ tasks.withType(JavaCompile) {
 
 def runDir = file("run")
 
-if(!runDir.exists() && !runDir.mkdirs()) {
+if (!runDir.exists() && !runDir.mkdirs()) {
 	throw new IOException("Failed to create run directory ${runDir.getAbsolutePath()}")
 }
 
@@ -98,7 +96,6 @@ bintray {
 		version {
 			name = project.version
 			released = new Date()
-			//vscTag = '' //TODO
 		}
 	}
 }
@@ -129,38 +126,5 @@ publishing {
 		}
 	}
 
-//	if (!isNullOrEmpty(System.getenv('GITHUB_OAUTH_TOKEN'))) {
-//		publications {
-//			mavenGitHub(MavenPublication) {
-//				pom {
-//					name = project.name
-//					description = project.description
-//					url = "https://github.com/${project.repoOwner}/${project.repoName}"
-//					licenses {
-//						license {
-//							name = project.codeLicense
-//						}
-//					}
-//
-//					scm {
-//						url = "https://github.com/${project.repoOwner}/${project.repoName}"
-//					}
-//				}
-//
-//				// add all the jars that should be included when publishing to maven
-//				artifact remapJar
-//			}
-//		}
-//		// select the repositories you want to publish to
-//		repositories {
-//			maven {
-//				name = "GitHub"
-//				url = uri("https://maven.pkg.github.com/${project.repoOwner}/${project.repoName}")
-//				credentials {
-//					username = "${project.githubPackagePublisher}"
-//					password = System.getenv('GITHUB_OAUTH_TOKEN')
-//				}
-//			}
-//		}
-//	}
+
 }
