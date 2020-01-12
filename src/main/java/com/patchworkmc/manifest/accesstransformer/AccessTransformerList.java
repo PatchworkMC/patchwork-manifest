@@ -20,11 +20,10 @@ public class AccessTransformerList {
 		List<String> lines;
 
 		try {
-			lines = accessTransformer.toFile().exists()
-					? Files.readAllLines(accessTransformer)
-					: new ArrayList<>();
+			lines = Files.readAllLines(accessTransformer);
 		} catch (IOException ex) {
-			return null;
+			// File can't be read (most likely doesn't exist), return a blank list
+			return new AccessTransformerList(new ArrayList<>());
 		}
 
 		List<AccessTransformerEntry> entries = new ArrayList<>();
