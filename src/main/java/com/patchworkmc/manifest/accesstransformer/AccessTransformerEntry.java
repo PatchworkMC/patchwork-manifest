@@ -21,7 +21,7 @@ public class AccessTransformerEntry {
 		}
 
 		this.memberName = memberName;
-		this.inheritiedFromDependency = false;
+		this.inheritiedFromDependency = inheritedFromDependency;
 	}
 
 	public AccessTransformerEntry remap(Remapper remapper) {
