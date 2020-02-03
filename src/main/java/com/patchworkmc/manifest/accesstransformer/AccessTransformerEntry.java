@@ -59,7 +59,7 @@ public class AccessTransformerEntry {
 		return this.inheritiedFromDependency;
 	}
 
-	protected AccessTransformerEntry clone(boolean setAsInherited) {
+	public AccessTransformerEntry clone(boolean setAsInherited) {
 		return new AccessTransformerEntry(className, memberName, setAsInherited);
 	}
 }
