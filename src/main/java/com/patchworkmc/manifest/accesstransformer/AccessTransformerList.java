@@ -54,7 +54,7 @@ public class AccessTransformerList {
 				throw new UnsupportedOperationException("Classes are not supported");
 			// public-f com/example/Foo bar (member)
 			case 3:
-				entries.add(new AccessTransformerEntry(words[1], words[2]));
+				entries.add(new AccessTransformerEntry(words[1], words[2], false));
 				break;
 			default:
 				throw new ManifestParseException("access transformer line had too few/too many parts: expects 2/3/4, got " + words.length);
@@ -73,6 +73,11 @@ public class AccessTransformerList {
 		entries.forEach(e -> newEntries.add(e.remap(remapper)));
 		entries.clear();
 		entries.addAll(newEntries);
+		return this;
+	}
+
+	public AccessTransformerList merge(AccessTransformerList list) {
+		list.getEntries().forEach(entry -> this.entries.add(entry.clone(true)));
 		return this;
 	}
 }

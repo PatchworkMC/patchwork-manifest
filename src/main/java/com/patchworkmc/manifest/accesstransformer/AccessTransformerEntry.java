@@ -7,8 +7,9 @@ public class AccessTransformerEntry {
 	private String memberName;
 	private String descriptor = "";
 	private boolean isField;
+	private boolean inheritiedFromDependency;
 
-	public AccessTransformerEntry(String className, String memberName) {
+	public AccessTransformerEntry(String className, String memberName, boolean inheritedFromDependency) {
 		this.className = className;
 		this.memberName = memberName;
 		this.isField = !memberName.contains("(");
@@ -20,6 +21,7 @@ public class AccessTransformerEntry {
 		}
 
 		this.memberName = memberName;
+		this.inheritiedFromDependency = false;
 	}
 
 	public AccessTransformerEntry remap(Remapper remapper) {
@@ -51,5 +53,13 @@ public class AccessTransformerEntry {
 
 	public String getDescriptor() {
 		return this.descriptor;
+	}
+
+	public boolean inheritiedFromDependency() {
+		return this.inheritiedFromDependency;
+	}
+
+	protected AccessTransformerEntry clone(boolean setAsInherited) {
+		return new AccessTransformerEntry(className, memberName, setAsInherited);
 	}
 }
