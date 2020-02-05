@@ -1,5 +1,7 @@
 package com.patchworkmc.manifest.accesstransformer;
 
+import java.util.Objects;
+
 import com.patchworkmc.manifest.api.Remapper;
 
 public class AccessTransformerEntry {
@@ -51,5 +53,27 @@ public class AccessTransformerEntry {
 
 	public String getDescriptor() {
 		return this.descriptor;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		AccessTransformerEntry that = (AccessTransformerEntry) o;
+		return isField() == that.isField()
+						&& Objects.equals(getClassName(), that.getClassName())
+						&& Objects.equals(getMemberName(), that.getMemberName())
+						&& Objects.equals(getDescriptor(), that.getDescriptor());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getClassName(), getMemberName(), getDescriptor(), isField());
 	}
 }
