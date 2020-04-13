@@ -157,11 +157,10 @@
 			<!-- require a package following the following structure:
 			base package name: net.patchworkmc.patchwork
 			+ mods.toml subpackage: mod
-			+ accesstransformers.cfg subpackage: accesstransformer
-			+ api subpackage: api
+			+ accesstransformers.cfg subpackage: accesstransformer(.*)
 			-->
 			<property name="format"
-					  value="^com\.patchworkmc\.manifest(\.api$|.mod$|.accesstransformer$|$)"/>
+					  value="^com\.patchworkmc\.manifest(\.api$|\.mod$|\.accesstransformer$|.accesstransformer\..+$|$)"/>
 		</module>
 
 		<!--<module name="InvalidJavadocPosition"/>-->

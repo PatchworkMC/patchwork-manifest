@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.patchworkmc.manifest.api.Remapper;
 
+@Deprecated
 public class AccessTransformerEntry {
 	private String className;
 	private String memberName;

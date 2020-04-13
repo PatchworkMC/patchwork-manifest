@@ -9,6 +9,7 @@ import java.util.List;
 import com.patchworkmc.manifest.api.Remapper;
 import com.patchworkmc.manifest.mod.ManifestParseException;
 
+@Deprecated
 public class AccessTransformerList {
 	private List<AccessTransformerEntry> entries;
 
