@@ -158,6 +158,7 @@
 			base package name: net.patchworkmc.patchwork
 			+ mods.toml subpackage: mod
 			+ accesstransformers.cfg subpackage: accesstransformer(.*)
+			+ api subpackage: api
 			-->
 			<property name="format"
 					  value="^com\.patchworkmc\.manifest(\.api$|\.mod$|\.accesstransformer$|.accesstransformer\..+$|$)"/>
