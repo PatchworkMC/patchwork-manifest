@@ -127,7 +127,7 @@ public class ForgeAccessTransformer {
 	private static AccessLevel getAccessLevel(String modifier) {
 		// Remove -f and +f
 		String accessLevel = modifier.split("\\+")[0].split("-")[0];
-		return AccessLevel.valueOf(accessLevel);
+		return AccessLevel.valueOf(accessLevel.toUpperCase());
 	}
 
 	private static List<String> removeCommentsFromLine(List<String> words) {
