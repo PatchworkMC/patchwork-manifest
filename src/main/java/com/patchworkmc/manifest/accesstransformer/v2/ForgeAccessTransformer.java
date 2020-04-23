@@ -2,8 +2,6 @@ package com.patchworkmc.manifest.accesstransformer.v2;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,8 +62,9 @@ public class ForgeAccessTransformer {
 				}
 
 				String modifier = words[0];
-				AccessLevel accessLevel = getAccessLevel(modifier);
 				Finalization finalization = getFinalization(modifier);
+				AccessLevel accessLevel = getAccessLevel(modifier, finalization);
+
 				String targetClassName = words[1];
 
 				if (words.length == 2) {
