@@ -6,9 +6,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
 import com.patchworkmc.manifest.api.Remapper;
 import com.patchworkmc.manifest.mod.ManifestParseException;
 
+/**
+ * @deprecated for removal in a future release. Use {@link ForgeAccessTransformer} instead.
+ */
 @Deprecated
 public class AccessTransformerList {
 	private List<AccessTransformerEntry> entries;

@@ -4,5 +4,6 @@ public enum AccessLevel {
 	PRIVATE,
 	DEFAULT, // package-private--using FMLAT name for valueOf support
 	PROTECTED,
-	PUBLIC
+	PUBLIC,
+	KEEP // for classes
 }

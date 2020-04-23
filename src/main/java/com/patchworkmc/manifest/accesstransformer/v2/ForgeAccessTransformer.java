@@ -35,13 +35,15 @@ public class ForgeAccessTransformer {
 		for (TransformedClass transformedClass : this.classes) {
 			remappedClasses.add(transformedClass.remap(remapper));
 		}
+
+		this.classes = remappedClasses;
 	}
 
 	public Set<TransformedClass> getClasses() {
 		return Collections.unmodifiableSet(classes);
 	}
 
-	public static ForgeAccessTransformer of(Path path) throws ManifestParseException {
+	public static ForgeAccessTransformer parse(Path path) throws ManifestParseException {
 		HashMap<String, TransformedClass> classes = new HashMap<>();
 
 		try {
@@ -50,22 +52,23 @@ public class ForgeAccessTransformer {
 
 			for (String line : lines) {
 				// List of all words in this line with comments stripped
-				List<String> words = removeCommentsFromLine(Arrays.asList(line.split(" ")));
+				String[] words = line.split("#")[0].split(" ");
 
-				if (words.isEmpty()) {
+				if (words.length == 0) {
 					continue;
 				}
 
 				// make sure our length is correct
-				if (words.size() < 2 || words.size() > 3) {
-					throw new ManifestParseException("expected size of 2 or 3, got " + words.size());
+				if (words.length < 2 || words.length > 3) {
+					throw new ManifestParseException("expected size of 2 or 3, got " + words.length);
 				}
 
-				AccessLevel accessLevel = getAccessLevel(words.get(0));
-				Finalization finalization = getFinalization(words.get(0));
-				String targetClassName = words.get(1);
+				String modifier = words[0];
+				AccessLevel accessLevel = getAccessLevel(modifier);
+				Finalization finalization = getFinalization(modifier);
+				String targetClassName = words[1];
 
-				if (words.size() == 2) {
+				if (words.length == 2) {
 					if (classes.containsKey(targetClassName)) {
 						throw new ManifestParseException("two transformations of the same class!");
 					}
@@ -73,15 +76,9 @@ public class ForgeAccessTransformer {
 					classes.put(targetClassName, new TransformedClass(targetClassName, finalization, accessLevel));
 				} else {
 					// Method or field
-					TransformedClass targetClass;
+					TransformedClass targetClass = classes.computeIfAbsent(targetClassName, name -> new TransformedClass(name, Finalization.KEEP, AccessLevel.KEEP));
 
-					if (classes.containsKey(targetClassName)) {
-						targetClass = classes.get(targetClassName);
-					} else {
-						targetClass = classes.put(targetClassName, new TransformedClass(targetClassName, finalization, accessLevel));
-					}
-
-					String memberWord = words.get(3);
+					String memberWord = words[2];
 
 					if (memberWord.contains("(") && memberWord.contains(")")) {
 						// Method
@@ -89,7 +86,7 @@ public class ForgeAccessTransformer {
 						String methodDescriptor = memberWord.substring(memberWord.indexOf('(', memberWord.indexOf(')' + 1)));
 
 						if (methodName.equals("*")) {
-							targetClass.acceptDefaultMethod(new TransformedNameless(accessLevel, finalization));
+							targetClass.acceptDefaultMethod(new TransformedWildcardMember(accessLevel, finalization));
 						} else {
 							targetClass.acceptMethod(new TransformedMethod(targetClassName, methodName, "(" + methodDescriptor, accessLevel, finalization));
 						}
@@ -100,7 +97,7 @@ public class ForgeAccessTransformer {
 
 						// Field
 						if (memberWord.equals("*")) {
-							targetClass.acceptDefaultField(new TransformedNameless(accessLevel, finalization));
+							targetClass.acceptDefaultField(new TransformedWildcardMember(accessLevel, finalization));
 						} else {
 							targetClass.acceptField(new TransformedField(targetClassName, memberWord, accessLevel, finalization));
 						}
@@ -124,23 +121,11 @@ public class ForgeAccessTransformer {
 		}
 	}
 
-	private static AccessLevel getAccessLevel(String modifier) {
-		// Remove -f and +f
-		String accessLevel = modifier.split("\\+")[0].split("-")[0];
-		return AccessLevel.valueOf(accessLevel.toUpperCase());
-	}
-
-	private static List<String> removeCommentsFromLine(List<String> words) {
-		List<String> newWords = new ArrayList<>();
-
-		for (String word : words) {
-			if (word.contains("#")) {
-				newWords.add(word.substring(0, word.indexOf('#')));
-			} else {
-				newWords.add(word);
-			}
+	private static AccessLevel getAccessLevel(String modifier, Finalization finalization) {
+		if (finalization != Finalization.REMOVE) {
+			modifier = modifier.substring(0, modifier.length() - 2);
 		}
 
-		return newWords;
+		return AccessLevel.valueOf(modifier.toUpperCase());
 	}
 }
