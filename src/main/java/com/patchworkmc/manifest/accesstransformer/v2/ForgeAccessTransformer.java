@@ -79,17 +79,16 @@ public class ForgeAccessTransformer {
 
 					String memberWord = words[2];
 
-					if (memberWord.contains("(") && memberWord.contains(")")) {
+					if (memberWord.equals("*()")) {
+						targetClass.acceptDefaultMethod(new TransformedWildcardMember(accessLevel, finalization));
+					} else if (memberWord.contains("(") && memberWord.contains(")")) {
 						// Method
 						String methodName = memberWord.substring(0, memberWord.indexOf('('));
 						String methodDescriptor = memberWord.substring(memberWord.indexOf('(', memberWord.indexOf(')' + 1)));
 
-						if (methodName.equals("*")) {
-							targetClass.acceptDefaultMethod(new TransformedWildcardMember(accessLevel, finalization));
-						} else {
-							targetClass.acceptMethod(new TransformedMethod(targetClassName, methodName, "(" + methodDescriptor, accessLevel, finalization));
-						}
+						targetClass.acceptMethod(new TransformedMethod(targetClassName, methodName, "(" + methodDescriptor, accessLevel, finalization));
 					} else {
+						// Fail hard for malformed member entries
 						if (memberWord.contains("(") || memberWord.contains(")")) {
 							throw new ManifestParseException("unopened/closed parenthesis for " + memberWord);
 						}
