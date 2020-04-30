@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.mod;
+package net.patchworkmc.manifest.mod;
 
 import java.util.Map;
 

@@ -161,7 +161,7 @@
 			+ api subpackage: api
 			-->
 			<property name="format"
-					  value="^com\.patchworkmc\.manifest(\.api$|\.mod$|\.accesstransformer$|.accesstransformer\..+$|$)"/>
+					  value="^net\.patchworkmc\.manifest(\.api$|\.mod$|\.accesstransformer$|.accesstransformer\..+$|$)"/>
 		</module>
 
 		<!--<module name="InvalidJavadocPosition"/>-->

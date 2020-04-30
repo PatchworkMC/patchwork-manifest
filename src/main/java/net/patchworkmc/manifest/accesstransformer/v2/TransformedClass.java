@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.accesstransformer.v2;
+package net.patchworkmc.manifest.accesstransformer.v2;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -6,9 +6,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
-import com.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
-import com.patchworkmc.manifest.api.Remapper;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
+import net.patchworkmc.manifest.api.Remapper;
 
 public class TransformedClass extends Transformed {
 	private final Set<TransformedField> fields;

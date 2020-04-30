@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.accesstransformer.v2.flags;
+package net.patchworkmc.manifest.accesstransformer.v2.flags;
 
 public enum AccessLevel {
 	PRIVATE,

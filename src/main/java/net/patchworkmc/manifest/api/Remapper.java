@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.api;
+package net.patchworkmc.manifest.api;
 
 public interface Remapper {
 	String remapMemberDescription(String descriptor);

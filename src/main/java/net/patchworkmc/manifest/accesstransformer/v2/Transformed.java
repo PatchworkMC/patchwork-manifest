@@ -1,8 +1,8 @@
-package com.patchworkmc.manifest.accesstransformer.v2;
+package net.patchworkmc.manifest.accesstransformer.v2;
 
-import com.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
-import com.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
-import com.patchworkmc.manifest.api.Remapper;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
+import net.patchworkmc.manifest.api.Remapper;
 
 public abstract class Transformed {
 	private final String name;

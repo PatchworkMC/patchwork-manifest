@@ -1,7 +1,7 @@
-package com.patchworkmc.manifest.accesstransformer.v2;
+package net.patchworkmc.manifest.accesstransformer.v2;
 
-import com.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
-import com.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
 
 public abstract class TransformedMember extends Transformed {
 	private final String owner;

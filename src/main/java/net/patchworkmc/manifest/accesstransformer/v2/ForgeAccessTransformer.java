@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.accesstransformer.v2;
+package net.patchworkmc.manifest.accesstransformer.v2;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
-import com.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
-import com.patchworkmc.manifest.api.Remapper;
-import com.patchworkmc.manifest.mod.ManifestParseException;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
+import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
+import net.patchworkmc.manifest.api.Remapper;
+import net.patchworkmc.manifest.mod.ManifestParseException;
 
 /**
  * A representation of an access transformer file that adheres to the

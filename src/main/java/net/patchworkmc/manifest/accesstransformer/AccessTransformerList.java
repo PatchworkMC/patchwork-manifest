@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.accesstransformer;
+package net.patchworkmc.manifest.accesstransformer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
-import com.patchworkmc.manifest.api.Remapper;
-import com.patchworkmc.manifest.mod.ManifestParseException;
+import net.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
+import net.patchworkmc.manifest.api.Remapper;
+import net.patchworkmc.manifest.mod.ManifestParseException;
 
 /**
  * @deprecated for removal in a future release. Use {@link ForgeAccessTransformer} instead.

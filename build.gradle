@@ -23,7 +23,7 @@ if (ENV.bintray_user && ENV.bintray_key) {
 	version = 'LOCAL'
 }
 
-group = 'com.patchworkmc'
+group = 'net.patchworkmc'
 archivesBaseName = 'patchwork-manifest'
 repositories {
 	mavenCentral()
@@ -54,7 +54,7 @@ publishing {
 }
 
 application {
-	mainClassName "com.patchworkmc.manifest.Main"
+	mainClassName "net.patchworkmc.manifest.Main"
 }
 
 checkstyle {

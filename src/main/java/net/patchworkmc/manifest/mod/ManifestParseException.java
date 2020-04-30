@@ -1,4 +1,4 @@
-package com.patchworkmc.manifest.mod;
+package net.patchworkmc.manifest.mod;
 
 public class ManifestParseException extends Exception {
 	public ManifestParseException(String message) {

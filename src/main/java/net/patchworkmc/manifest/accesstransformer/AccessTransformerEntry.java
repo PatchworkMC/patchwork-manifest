@@ -1,9 +1,9 @@
-package com.patchworkmc.manifest.accesstransformer;
+package net.patchworkmc.manifest.accesstransformer;
 
 import java.util.Objects;
 
-import com.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
-import com.patchworkmc.manifest.api.Remapper;
+import net.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
+import net.patchworkmc.manifest.api.Remapper;
 
 /**
  * @deprecated for removal in a future release. Use {@link ForgeAccessTransformer} instead.
