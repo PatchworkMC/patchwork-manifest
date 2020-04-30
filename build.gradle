@@ -43,7 +43,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 publishing {
 	publications {
 		maven(MavenPublication) {
-			groupId 'com.patchworkmc'
+			groupId 'net.patchworkmc'
 			artifactId "patchwork-manifest"
 			version version
 
