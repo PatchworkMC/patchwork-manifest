@@ -14,18 +14,18 @@ public class TransformedClass extends Transformed {
 	private final Set<TransformedField> fields;
 	private final Set<TransformedMethod> methods;
 	@Nullable
-	private TransformedWildcardMember defaultForFields;
+	private TransformedWildcardMember fieldWildcard;
 	@Nullable
-	private TransformedWildcardMember defaultForMethods;
+	private TransformedWildcardMember methodWildcard;
 
 	public TransformedClass(String name, Finalization finalization, AccessLevel accessLevel,
-					Set<TransformedField> fields, Set<TransformedMethod> methods,
-					@Nullable TransformedWildcardMember defaultForFields, @Nullable TransformedWildcardMember defaultForMethods) {
+	                        Set<TransformedField> fields, Set<TransformedMethod> methods,
+	                        @Nullable TransformedWildcardMember fieldWildcard, @Nullable TransformedWildcardMember methodWildcard) {
 		super(name, accessLevel, finalization);
 		this.fields = fields;
 		this.methods = methods;
-		this.defaultForFields = defaultForFields;
-		this.defaultForMethods = defaultForMethods;
+		this.fieldWildcard = fieldWildcard;
+		this.methodWildcard = methodWildcard;
 	}
 
 	// For use with the parser in ForgeAccessTransformer
@@ -56,17 +56,17 @@ public class TransformedClass extends Transformed {
 			remappedMethods.add(method.remap(remapper));
 		}
 
-		return new TransformedClass(remappedName, getFinalization(), getAccessLevel(), remappedFields, remappedMethods, defaultForFields, defaultForMethods);
+		return new TransformedClass(remappedName, getFinalization(), getAccessLevel(), remappedFields, remappedMethods, fieldWildcard, methodWildcard);
 	}
 
 	@Nullable
-	public TransformedWildcardMember getDefaultForFields() {
-		return defaultForFields;
+	public TransformedWildcardMember getFieldWildcard() {
+		return fieldWildcard;
 	}
 
 	@Nullable
-	public TransformedWildcardMember getDefaultForMethods() {
-		return defaultForMethods;
+	public TransformedWildcardMember getMethodWildcard() {
+		return methodWildcard;
 	}
 
 	// These methods are helpers for the parser.
@@ -83,19 +83,19 @@ public class TransformedClass extends Transformed {
 		}
 	}
 
-	protected void acceptDefaultField(TransformedWildcardMember fieldDefault) {
-		if (this.defaultForFields == null) {
-			this.defaultForFields = fieldDefault;
+	protected void acceptFieldWildcard(TransformedWildcardMember fieldWildcard) {
+		if (this.fieldWildcard == null) {
+			this.fieldWildcard = fieldWildcard;
 		} else {
-			throw new IllegalStateException("defaultForFields has already been set!");
+			throw new IllegalStateException("fieldWildcard has already been set!");
 		}
 	}
 
-	protected void acceptDefaultMethod(TransformedWildcardMember methodDefault) {
-		if (this.defaultForMethods == null) {
-			this.defaultForMethods = methodDefault;
+	protected void acceptMethodWildcard(TransformedWildcardMember methodWildcard) {
+		if (this.methodWildcard == null) {
+			this.methodWildcard = methodWildcard;
 		} else {
-			throw new IllegalStateException("defaultForMethods has already been set!");
+			throw new IllegalStateException("methodWildcard has already been set!");
 		}
 	}
 }
