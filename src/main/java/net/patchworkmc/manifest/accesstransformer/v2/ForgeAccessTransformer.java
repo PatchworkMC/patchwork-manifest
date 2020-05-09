@@ -50,11 +50,18 @@ public class ForgeAccessTransformer {
 
 			for (String line : lines) {
 				// List of all words in this line with comments stripped
-				String[] words = line.split("#")[0].split(" ");
+				int commentIndex = line.indexOf('#');
+				String strippedLine = "";
 
-				if (words.length == 0) {
+				if (commentIndex != -1) {
+					strippedLine = line.substring(0, line.indexOf('#'));
+				}
+
+				if (strippedLine.isEmpty()) {
 					continue;
 				}
+
+				String[] words = strippedLine.split(" ");
 
 				// make sure our length is correct
 				if (words.length < 2 || words.length > 3) {
@@ -86,7 +93,7 @@ public class ForgeAccessTransformer {
 						String methodName = memberWord.substring(0, memberWord.indexOf('('));
 						String methodDescriptor = memberWord.substring(memberWord.indexOf('(', memberWord.indexOf(')' + 1)));
 
-						targetClass.acceptMethod(new TransformedMethod(targetClassName, methodName, "(" + methodDescriptor, accessLevel, finalization));
+						targetClass.acceptMethod(new TransformedMethod(targetClassName, methodName, methodDescriptor, accessLevel, finalization));
 					} else {
 						// Fail hard for malformed member entries
 						if (memberWord.contains("(") || memberWord.contains(")")) {
@@ -120,7 +127,7 @@ public class ForgeAccessTransformer {
 	}
 
 	private static AccessLevel getAccessLevel(String modifier, Finalization finalization) {
-		if (finalization != Finalization.REMOVE) {
+		if (finalization != Finalization.KEEP) {
 			modifier = modifier.substring(0, modifier.length() - 2);
 		}
 

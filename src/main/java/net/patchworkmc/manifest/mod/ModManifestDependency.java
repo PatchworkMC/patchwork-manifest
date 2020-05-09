@@ -32,8 +32,8 @@ public class ModManifestDependency {
 			dependency.modId = ManifestParseHelper.getString(data, "modId", true);
 			dependency.mandatory = data.get("mandatory") == Boolean.TRUE;
 			dependency.versionRange = ManifestParseHelper.getString(data, "versionRange", true);
-			dependency.ordering = ManifestParseHelper.getString(data, "ordering", true);
-			dependency.side = ManifestParseHelper.getString(data, "side", true);
+			dependency.ordering = ManifestParseHelper.getString(data, "ordering", false);
+			dependency.side = ManifestParseHelper.getString(data, "side", false);
 		} catch (IllegalArgumentException e) {
 			throw new ManifestParseException("Failed to parse mod manifest dependency entry", e);
 		}
