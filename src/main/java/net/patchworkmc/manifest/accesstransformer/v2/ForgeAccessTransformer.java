@@ -80,7 +80,7 @@ public class ForgeAccessTransformer {
 					String memberWord = words[2];
 
 					if (memberWord.equals("*()")) {
-						targetClass.acceptDefaultMethod(new TransformedWildcardMember(accessLevel, finalization));
+						targetClass.acceptMethodWildcard(new TransformedWildcardMember(accessLevel, finalization));
 					} else if (memberWord.contains("(") && memberWord.contains(")")) {
 						// Method
 						String methodName = memberWord.substring(0, memberWord.indexOf('('));
@@ -95,7 +95,7 @@ public class ForgeAccessTransformer {
 
 						// Field
 						if (memberWord.equals("*")) {
-							targetClass.acceptDefaultField(new TransformedWildcardMember(accessLevel, finalization));
+							targetClass.acceptFieldWildcard(new TransformedWildcardMember(accessLevel, finalization));
 						} else {
 							targetClass.acceptField(new TransformedField(targetClassName, memberWord, accessLevel, finalization));
 						}
