@@ -14,13 +14,13 @@ public class TransformedClass extends Transformed {
 	private final Set<TransformedField> fields;
 	private final Set<TransformedMethod> methods;
 	@Nullable
-	private Transformed defaultForFields;
+	private TransformedWildcardMember defaultForFields;
 	@Nullable
-	private Transformed defaultForMethods;
+	private TransformedWildcardMember defaultForMethods;
 
 	public TransformedClass(String name, Finalization finalization, AccessLevel accessLevel,
 					Set<TransformedField> fields, Set<TransformedMethod> methods,
-					@Nullable Transformed defaultForFields, @Nullable Transformed defaultForMethods) {
+					@Nullable TransformedWildcardMember defaultForFields, @Nullable TransformedWildcardMember defaultForMethods) {
 		super(name, accessLevel, finalization);
 		this.fields = fields;
 		this.methods = methods;
@@ -60,12 +60,12 @@ public class TransformedClass extends Transformed {
 	}
 
 	@Nullable
-	public Transformed getDefaultForFields() {
+	public TransformedWildcardMember getDefaultForFields() {
 		return defaultForFields;
 	}
 
 	@Nullable
-	public Transformed getDefaultForMethods() {
+	public TransformedWildcardMember getDefaultForMethods() {
 		return defaultForMethods;
 	}
 
@@ -83,7 +83,7 @@ public class TransformedClass extends Transformed {
 		}
 	}
 
-	protected void acceptDefaultField(Transformed fieldDefault) {
+	protected void acceptDefaultField(TransformedWildcardMember fieldDefault) {
 		if (this.defaultForFields == null) {
 			this.defaultForFields = fieldDefault;
 		} else {
@@ -91,7 +91,7 @@ public class TransformedClass extends Transformed {
 		}
 	}
 
-	protected void acceptDefaultMethod(Transformed methodDefault) {
+	protected void acceptDefaultMethod(TransformedWildcardMember methodDefault) {
 		if (this.defaultForMethods == null) {
 			this.defaultForMethods = methodDefault;
 		} else {
