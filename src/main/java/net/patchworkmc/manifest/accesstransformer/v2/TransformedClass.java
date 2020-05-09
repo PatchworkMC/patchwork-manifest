@@ -19,8 +19,8 @@ public class TransformedClass extends Transformed {
 	private TransformedWildcardMember methodWildcard;
 
 	public TransformedClass(String name, Finalization finalization, AccessLevel accessLevel,
-	                        Set<TransformedField> fields, Set<TransformedMethod> methods,
-	                        @Nullable TransformedWildcardMember fieldWildcard, @Nullable TransformedWildcardMember methodWildcard) {
+							Set<TransformedField> fields, Set<TransformedMethod> methods,
+							@Nullable TransformedWildcardMember fieldWildcard, @Nullable TransformedWildcardMember methodWildcard) {
 		super(name, accessLevel, finalization);
 		this.fields = fields;
 		this.methods = methods;
