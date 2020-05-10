@@ -31,9 +31,10 @@ public class ModManifestDependency {
 			// Check these "required" bounds
 			dependency.modId = ManifestParseHelper.getString(data, "modId", true);
 			dependency.mandatory = data.get("mandatory") == Boolean.TRUE;
-			dependency.versionRange = ManifestParseHelper.getString(data, "versionRange", true);
-			dependency.ordering = ManifestParseHelper.getString(data, "ordering", true);
-			dependency.side = ManifestParseHelper.getString(data, "side", true);
+			// versionRange is declared as "true" but mods boot without it anyway....
+			dependency.versionRange = ManifestParseHelper.getString(data, "versionRange", false);
+			dependency.ordering = ManifestParseHelper.getString(data, "ordering", false);
+			dependency.side = ManifestParseHelper.getString(data, "side", false);
 		} catch (IllegalArgumentException e) {
 			throw new ManifestParseException("Failed to parse mod manifest dependency entry", e);
 		}
