@@ -55,6 +55,8 @@ public class ForgeAccessTransformer {
 
 				if (commentIndex != -1) {
 					strippedLine = line.substring(0, line.indexOf('#'));
+				} else {
+					strippedLine = line;
 				}
 
 				if (strippedLine.isEmpty()) {
