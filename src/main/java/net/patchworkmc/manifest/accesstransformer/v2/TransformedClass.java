@@ -3,9 +3,12 @@ package net.patchworkmc.manifest.accesstransformer.v2;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import net.patchworkmc.manifest.accesstransformer.v2.exception.FatalRemappingException;
+import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
 import net.patchworkmc.manifest.api.Remapper;
@@ -42,21 +45,39 @@ public class TransformedClass extends Transformed {
 		return Collections.unmodifiableSet(methods);
 	}
 
-	@Override
-	public TransformedClass remap(Remapper remapper) {
+	public TransformedClass remap(Remapper remapper, Consumer<MissingMappingException> errorLogger) throws MissingMappingException {
 		String remappedName = remapper.remapClassName(getName());
 		Set<TransformedField> remappedFields = new HashSet<>();
 		Set<TransformedMethod> remappedMethods = new HashSet<>();
 
 		for (TransformedField field : this.getFields()) {
-			remappedFields.add(field.remap(remapper));
+			try {
+				remappedFields.add(field.remap(remapper));
+			} catch (MissingMappingException ex) {
+				errorLogger.accept(ex);
+			}
 		}
 
 		for (TransformedMethod method : getMethods()) {
-			remappedMethods.add(method.remap(remapper));
+			try {
+				remappedMethods.add(method.remap(remapper));
+			} catch (MissingMappingException ex) {
+				errorLogger.accept(ex);
+			}
 		}
 
 		return new TransformedClass(remappedName, getFinalization(), getAccessLevel(), remappedFields, remappedMethods, fieldWildcard, methodWildcard);
+	}
+
+	@Override
+	public TransformedClass remap(Remapper remapper) throws MissingMappingException {
+		try {
+			return remap(remapper, ex -> {
+				throw new FatalRemappingException(ex);
+			});
+		} catch (FatalRemappingException ex) {
+			throw (MissingMappingException) ex.getCause();
+		}
 	}
 
 	@Nullable

@@ -3,6 +3,8 @@ package net.patchworkmc.manifest.accesstransformer;
 import java.util.Objects;
 
 import net.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
+import net.patchworkmc.manifest.accesstransformer.v2.exception.FatalRemappingException;
+import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.api.Remapper;
 
 /**
@@ -30,18 +32,22 @@ public class AccessTransformerEntry {
 	}
 
 	public AccessTransformerEntry remap(Remapper remapper) {
-		String mappedMemberName;
+		try {
+			String mappedMemberName;
 
-		if (this.isField) {
-			mappedMemberName = remapper.remapFieldName(this.className, this.memberName, "");
-		} else {
-			mappedMemberName = remapper.remapMethodName(this.className, this.memberName, this.descriptor);
-			this.descriptor = remapper.remapMemberDescription(descriptor);
+			if (this.isField) {
+				mappedMemberName = remapper.remapFieldName(this.className, this.memberName, "");
+			} else {
+				mappedMemberName = remapper.remapMethodName(this.className, this.memberName, this.descriptor);
+				this.descriptor = remapper.remapMemberDescription(descriptor);
+			}
+
+			this.className = remapper.remapClassName(this.className);
+			this.memberName = mappedMemberName;
+			return this;
+		} catch (MissingMappingException ex) {
+			throw new FatalRemappingException(ex);
 		}
-
-		this.className = remapper.remapClassName(this.className);
-		this.memberName = mappedMemberName;
-		return this;
 	}
 
 	public String getClassName() {

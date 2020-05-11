@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
 import net.patchworkmc.manifest.api.Remapper;
@@ -27,11 +29,15 @@ public class ForgeAccessTransformer {
 	/**
 	 * Remaps everything in this AT representation, down to the fields and methods.
 	 */
-	public void remap(Remapper remapper) {
+	public void remap(Remapper remapper, Consumer<MissingMappingException> errorLogger) {
 		Set<TransformedClass> remappedClasses = new HashSet<>();
 
 		for (TransformedClass transformedClass : this.classes) {
-			remappedClasses.add(transformedClass.remap(remapper));
+			try {
+				remappedClasses.add(transformedClass.remap(remapper, errorLogger));
+			} catch (MissingMappingException ex) {
+				errorLogger.accept(ex);
+			}
 		}
 
 		this.classes = remappedClasses;
