@@ -2,6 +2,7 @@ package net.patchworkmc.manifest.accesstransformer.v2;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -69,15 +70,21 @@ public class TransformedClass extends Transformed {
 		return new TransformedClass(remappedName, getFinalization(), getAccessLevel(), remappedFields, remappedMethods, fieldWildcard, methodWildcard);
 	}
 
+	/**
+	 * @deprecated Use {@link TransformedClass#remap(Remapper, Consumer)} instead.
+	 */
 	@Override
+	@Deprecated
 	public TransformedClass remap(Remapper remapper) throws MissingMappingException {
-		try {
-			return remap(remapper, ex -> {
-				throw new FatalRemappingException(ex);
-			});
-		} catch (FatalRemappingException ex) {
-			throw (MissingMappingException) ex.getCause();
+		LinkedList<MissingMappingException> suppressedExceptions = new LinkedList<>();
+		TransformedClass result = remap(remapper, suppressedExceptions::add);
+
+		if (!suppressedExceptions.isEmpty()) {
+			MissingMappingException ex = new MissingMappingException("Failed to remap some members for class!");
+			suppressedExceptions.forEach(ex::addSuppressed);
+			throw ex;
 		}
+		return result;
 	}
 
 	@Nullable
