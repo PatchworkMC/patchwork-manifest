@@ -76,7 +76,7 @@ public class TransformedClass extends Transformed {
 	@Override
 	@Deprecated
 	public TransformedClass remap(Remapper remapper) throws MissingMappingException {
-		LinkedList<MissingMappingException> suppressedExceptions = new LinkedList<>();
+		List<MissingMappingException> suppressedExceptions = new ArrayList<>();
 		TransformedClass result = remap(remapper, suppressedExceptions::add);
 
 		if (!suppressedExceptions.isEmpty()) {
