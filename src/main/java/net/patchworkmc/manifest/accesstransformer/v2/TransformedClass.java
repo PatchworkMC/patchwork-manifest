@@ -1,14 +1,13 @@
 package net.patchworkmc.manifest.accesstransformer.v2;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import net.patchworkmc.manifest.accesstransformer.v2.exception.FatalRemappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
@@ -76,7 +75,7 @@ public class TransformedClass extends Transformed {
 	@Override
 	@Deprecated
 	public TransformedClass remap(Remapper remapper) throws MissingMappingException {
-		List<MissingMappingException> suppressedExceptions = new ArrayList<>();
+		ArrayList<MissingMappingException> suppressedExceptions = new ArrayList<>();
 		TransformedClass result = remap(remapper, suppressedExceptions::add);
 
 		if (!suppressedExceptions.isEmpty()) {
@@ -84,6 +83,7 @@ public class TransformedClass extends Transformed {
 			suppressedExceptions.forEach(ex::addSuppressed);
 			throw ex;
 		}
+
 		return result;
 	}
 
