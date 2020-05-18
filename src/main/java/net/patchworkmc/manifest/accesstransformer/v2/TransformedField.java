@@ -1,5 +1,6 @@
 package net.patchworkmc.manifest.accesstransformer.v2;
 
+import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
 import net.patchworkmc.manifest.api.Remapper;
@@ -10,7 +11,7 @@ public class TransformedField extends TransformedMember {
 	}
 
 	@Override
-	public TransformedField remap(Remapper remapper) {
+	public TransformedField remap(Remapper remapper) throws MissingMappingException {
 		return new TransformedField(remapper.remapClassName(getOwner()), remapper.remapFieldName(getOwner(), getName()), getAccessLevel(), getFinalization());
 	}
 }

@@ -1,15 +1,17 @@
 package net.patchworkmc.manifest.api;
 
-public interface Remapper {
-	String remapMemberDescription(String descriptor);
+import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 
-	default String remapFieldName(String owner, String name) {
+public interface Remapper {
+	String remapMemberDescription(String descriptor) throws MissingMappingException;
+
+	default String remapFieldName(String owner, String name) throws MissingMappingException {
 		return remapFieldName(owner, name, "");
 	}
 
-	String remapFieldName(String owner, String name, String descriptor);
+	String remapFieldName(String owner, String name, String descriptor) throws MissingMappingException;
 
-	String remapMethodName(String owner, String name, String descriptor);
+	String remapMethodName(String owner, String name, String descriptor) throws MissingMappingException;
 
-	String remapClassName(String name);
+	String remapClassName(String name) throws MissingMappingException;
 }
