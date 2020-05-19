@@ -3,7 +3,7 @@ package net.patchworkmc.manifest.accesstransformer;
 import java.util.Objects;
 
 import net.patchworkmc.manifest.accesstransformer.v2.ForgeAccessTransformer;
-import net.patchworkmc.manifest.accesstransformer.v2.exception.FatalRemappingException;
+import net.patchworkmc.manifest.accesstransformer.v2.exception.FatalMissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.api.Remapper;
 
@@ -46,7 +46,7 @@ public class AccessTransformerEntry {
 			this.memberName = mappedMemberName;
 			return this;
 		} catch (MissingMappingException ex) {
-			throw new FatalRemappingException(ex);
+			throw new FatalMissingMappingException(ex);
 		}
 	}
 
