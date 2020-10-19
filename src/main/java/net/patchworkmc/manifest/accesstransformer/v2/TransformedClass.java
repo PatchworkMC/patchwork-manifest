@@ -6,12 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-
 import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.Finalization;
 import net.patchworkmc.manifest.api.Remapper;
+import org.jetbrains.annotations.Nullable;
 
 public class TransformedClass extends Transformed {
 	private final Set<TransformedField> fields;
@@ -21,7 +20,7 @@ public class TransformedClass extends Transformed {
 	@Nullable
 	private TransformedWildcardMember methodWildcard;
 
-	public TransformedClass(String name, Finalization finalization, AccessLevel accessLevel,
+	protected TransformedClass(String name, Finalization finalization, AccessLevel accessLevel,
 							Set<TransformedField> fields, Set<TransformedMethod> methods,
 							@Nullable TransformedWildcardMember fieldWildcard, @Nullable TransformedWildcardMember methodWildcard) {
 		super(name, accessLevel, finalization);

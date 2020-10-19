@@ -1,6 +1,6 @@
 plugins {
 	id 'checkstyle'
-	id 'application'
+	id 'java-library'
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
@@ -8,7 +8,7 @@ plugins {
 	id 'org.sonarqube' version '3.0'
 }
 sourceCompatibility = 1.8
-
+targetCompatibility = 1.8
 def ENV = System.getenv()
 
 if (ENV.bintray_user && ENV.bintray_key) {
@@ -33,7 +33,7 @@ dependencies {
 	implementation 'com.electronwill.night-config:toml:3.6.0'
 
 	implementation 'com.google.code.gson:gson:2.8.5'
-	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	implementation 'org.jetbrains:annotations:16.0.1'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -54,10 +54,6 @@ publishing {
 	}
 }
 
-application {
-	mainClassName "net.patchworkmc.manifest.Main"
-}
-
 checkstyle {
 	configFile = rootProject.file("checkstyle.xml")
 	toolVersion = '8.25'
@@ -73,9 +69,6 @@ if (!runDir.exists() && !runDir.mkdirs()) {
 	throw new IOException("Failed to create run directory ${runDir.getAbsolutePath()}")
 }
 
-run {
-	workingDir runDir
-}
 bintray {
 	user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : System.getenv('bintray_user')
 	key = project.hasProperty('bintrayKey') ? project.getProperty('bintrayKey') : System.getenv('bintray_key')

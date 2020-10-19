@@ -10,7 +10,7 @@ public abstract class Transformed {
 	private final AccessLevel accessLevel;
 	private final Finalization finalization;
 
-	public Transformed(String name, AccessLevel accessLevel, Finalization finalization) {
+	protected Transformed(String name, AccessLevel accessLevel, Finalization finalization) {
 		this.name = name;
 		this.accessLevel = accessLevel;
 		this.finalization = finalization;
