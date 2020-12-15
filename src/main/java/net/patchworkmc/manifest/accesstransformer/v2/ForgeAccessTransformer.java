@@ -90,16 +90,21 @@ public class ForgeAccessTransformer {
 
 				String targetClassName = words.get(1);
 
+				TransformedClass targetClass = classes.computeIfAbsent(targetClassName, name -> new TransformedClass(name, Finalization.KEEP, AccessLevel.KEEP));
+
 				if (words.size() == 2) {
-					if (classes.containsKey(targetClassName)) {
+					if (targetClass.getFinalization() != Finalization.KEEP || targetClass.getAccessLevel() != AccessLevel.KEEP) {
 						throw new ManifestParseException("two transformations of the same class!");
 					}
 
-					classes.put(targetClassName, new TransformedClass(targetClassName, finalization, accessLevel));
+					// It's possible for an access transformation to a field within a class to be stated before an
+					// access transformation on the class itself, therefore we have to be able to change the access of
+					// the TransformedClass even after it has been created. Unfortunately it means that we can't keep
+					// the fields final, but oh well.
+					targetClass.setFinalization(finalization);
+					targetClass.setAccessLevel(accessLevel);
 				} else {
 					// Method or field
-					TransformedClass targetClass = classes.computeIfAbsent(targetClassName, name -> new TransformedClass(name, Finalization.KEEP, AccessLevel.KEEP));
-
 					String memberWord = words.get(2);
 
 					if (memberWord.equals("*()")) {

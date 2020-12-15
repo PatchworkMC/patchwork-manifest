@@ -44,6 +44,14 @@ public class TransformedClass extends Transformed {
 		return Collections.unmodifiableSet(methods);
 	}
 
+	void setFinalization(Finalization finalization) {
+		this.finalization = finalization;
+	}
+
+	void setAccessLevel(AccessLevel accessLevel) {
+		this.accessLevel = accessLevel;
+	}
+
 	public TransformedClass remap(Remapper remapper, Consumer<MissingMappingException> errorLogger) throws MissingMappingException {
 		String remappedName = remapper.remapClassName(getName());
 		Set<TransformedField> remappedFields = new HashSet<>();
