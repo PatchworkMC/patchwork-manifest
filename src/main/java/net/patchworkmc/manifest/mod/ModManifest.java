@@ -58,8 +58,18 @@ public class ModManifest {
 
 			// Parse the dependency mapping
 
-			Map<String, Object> dependencies =
-					ManifestParseHelper.getMap(data, "dependencies", false);
+			Map<String, Object> dependencies;
+
+			try {
+				dependencies = ManifestParseHelper.getMap(data, "dependencies", false);
+			} catch (ManifestParseException e) {
+				// If the dependencies list is of the wrong type, Forge silently ignores the dependency list instead of
+				// revealing any sort of error
+				//
+				// This is needed to properly patch the following mod:
+				// https://www.curseforge.com/minecraft/mc-mods/spice-of-life-carrot-edition
+				dependencies = null;
+			}
 
 			if (dependencies != null) {
 				for (Map.Entry<String, Object> dependencySet : dependencies.entrySet()) {
