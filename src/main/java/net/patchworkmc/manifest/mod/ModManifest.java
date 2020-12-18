@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Parsed representation of a mods.toml file.
  */
@@ -57,19 +59,7 @@ public class ModManifest {
 			}
 
 			// Parse the dependency mapping
-
-			Map<String, Object> dependencies;
-
-			try {
-				dependencies = ManifestParseHelper.getMap(data, "dependencies", false);
-			} catch (ManifestParseException e) {
-				// If the dependencies list is of the wrong type, Forge silently ignores the dependency list instead of
-				// revealing any sort of error
-				//
-				// This is needed to properly patch the following mod:
-				// https://www.curseforge.com/minecraft/mc-mods/spice-of-life-carrot-edition
-				dependencies = null;
-			}
+			Map<String, Object> dependencies = getDependenciesOrFailSilently(data);
 
 			if (dependencies != null) {
 				for (Map.Entry<String, Object> dependencySet : dependencies.entrySet()) {
@@ -102,6 +92,26 @@ public class ModManifest {
 		}
 
 		return manifest;
+	}
+
+	/**
+	 * Tries to obtain the dependencies map from the mod manifest, failing silently on type errors to mimic forge behavior.
+	 *
+	 * @param data the parsed representation of the mod manifest
+	 * @return the dependencies map if it is present and of the right type, null otherwise
+	 */
+	@Nullable
+	private static Map<String, Object> getDependenciesOrFailSilently(Map<String, Object> data) {
+		try {
+			return ManifestParseHelper.getMap(data, "dependencies", false);
+		} catch (ManifestParseException e) {
+			// If the dependencies list is of the wrong type, Forge silently ignores the dependency list instead of
+			// revealing any sort of error
+			//
+			// This is needed to properly patch the following mod:
+			// https://www.curseforge.com/minecraft/mc-mods/spice-of-life-carrot-edition
+			return null;
+		}
 	}
 
 	public String getModLoader() {
