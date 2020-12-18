@@ -7,8 +7,8 @@ import net.patchworkmc.manifest.api.Remapper;
 
 public abstract class Transformed {
 	private final String name;
-	private final AccessLevel accessLevel;
-	private final Finalization finalization;
+	protected AccessLevel accessLevel;
+	protected Finalization finalization;
 
 	protected Transformed(String name, AccessLevel accessLevel, Finalization finalization) {
 		this.name = name;

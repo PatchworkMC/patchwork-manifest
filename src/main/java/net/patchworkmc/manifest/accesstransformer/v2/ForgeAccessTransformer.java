@@ -2,12 +2,14 @@ package net.patchworkmc.manifest.accesstransformer.v2;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import net.patchworkmc.manifest.accesstransformer.v2.exception.MissingMappingException;
 import net.patchworkmc.manifest.accesstransformer.v2.flags.AccessLevel;
@@ -65,34 +67,45 @@ public class ForgeAccessTransformer {
 					strippedLine = line;
 				}
 
+				// Trim any leading or trailing whitespace
+				strippedLine = strippedLine.trim();
+
 				if (strippedLine.isEmpty()) {
 					continue;
 				}
 
-				String[] words = strippedLine.split(" ");
+				// Remove empty substrings since they represent whitespace
+				List<String> words = Arrays.stream(strippedLine.split(" "))
+						.filter(string -> !string.isEmpty())
+						.collect(Collectors.toList());
 
 				// make sure our length is correct
-				if (words.length < 2 || words.length > 3) {
-					throw new ManifestParseException("expected size of 2 or 3, got " + words.length);
+				if (words.size() < 2 || words.size() > 3) {
+					throw new ManifestParseException("Invalid AT line: expected size of 2 or 3, got " + words.size());
 				}
 
-				String modifier = words[0];
+				String modifier = words.get(0);
 				Finalization finalization = getFinalization(modifier);
 				AccessLevel accessLevel = getAccessLevel(modifier, finalization);
 
-				String targetClassName = words[1];
+				String targetClassName = words.get(1);
 
-				if (words.length == 2) {
-					if (classes.containsKey(targetClassName)) {
+				TransformedClass targetClass = classes.computeIfAbsent(targetClassName, name -> new TransformedClass(name, Finalization.KEEP, AccessLevel.KEEP));
+
+				if (words.size() == 2) {
+					if (targetClass.getFinalization() != Finalization.KEEP || targetClass.getAccessLevel() != AccessLevel.KEEP) {
 						throw new ManifestParseException("two transformations of the same class!");
 					}
 
-					classes.put(targetClassName, new TransformedClass(targetClassName, finalization, accessLevel));
+					// It's possible for an access transformation to a field within a class to be stated before an
+					// access transformation on the class itself, therefore we have to be able to change the access of
+					// the TransformedClass even after it has been created. Unfortunately it means that we can't keep
+					// the fields final, but oh well.
+					targetClass.setFinalization(finalization);
+					targetClass.setAccessLevel(accessLevel);
 				} else {
 					// Method or field
-					TransformedClass targetClass = classes.computeIfAbsent(targetClassName, name -> new TransformedClass(name, Finalization.KEEP, AccessLevel.KEEP));
-
-					String memberWord = words[2];
+					String memberWord = words.get(2);
 
 					if (memberWord.equals("*()")) {
 						targetClass.acceptMethodWildcard(new TransformedWildcardMember(accessLevel, finalization));
