@@ -4,14 +4,13 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'com.jfrog.bintray' version '1.8.4'
 	id 'org.sonarqube' version '3.0'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 def ENV = System.getenv()
 
-if (ENV.bintray_user && ENV.bintray_key) {
+if (ENV.MAVEN_PASSWORD) {
 	def versionName = System.getenv("GITHUB_REF")
 	versionName = versionName.substring(10)
 	if (versionName.startsWith("v")) {
@@ -41,19 +40,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
-publishing {
-	publications {
-		maven(MavenPublication) {
-			groupId 'net.patchworkmc'
-			artifactId "patchwork-manifest"
-			version version
-
-			artifact(jar)
-			artifact(sourcesJar)
-		}
-	}
-}
-
 checkstyle {
 	configFile = rootProject.file("checkstyle.xml")
 	toolVersion = '8.25'
@@ -69,54 +55,31 @@ if (!runDir.exists() && !runDir.mkdirs()) {
 	throw new IOException("Failed to create run directory ${runDir.getAbsolutePath()}")
 }
 
-bintray {
-	user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : System.getenv('bintray_user')
-	key = project.hasProperty('bintrayKey') ? project.getProperty('bintrayKey') : System.getenv('bintray_key')
-	publish = true
-	override = true
-	publications = ['mavenJava']
-	pkg {
-		repo = project.bintrayRepo
-		name = project.name
-		user = bintray.user
-		userOrg = project.repoOwner
-		licenses = [project.codeLicense]
-		desc = project.description
-		websiteUrl = "https://github.com/${project.repoOwner}/${project.repoName}"
-		issueTrackerUrl = "https://github.com/${project.repoOwner}/${project.repoName}/issues"
-		vcsUrl = "https://github.com/${project.repoOwner}/${project.repoName}.git"
-		publicDownloadNumbers = true
-
-		githubRepo = "${project.repoOwner}/${project.repoName}"
-		version {
-			name = project.version
-			released = new Date()
-		}
-	}
-}
-
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			pom {
 				name = project.name
 				description = project.description
-				url = "https://github.com/${project.repoOwner}/${project.repoName}"
-				licenses {
-					license {
-						name = project.codeLicense
-					}
-				}
-
-				scm {
-					url = "https://github.com/${project.repoOwner}/${project.repoName}"
-				}
+				url = "https://github.com/patchworkmc/patchwork-manifest"
 			}
 
 			// add all the jars that should be included when publishing to maven
 			afterEvaluate {
 				artifact jar
 				artifact sourcesJar
+			}
+		}
+	}
+
+	repositories {
+		if (ENV.MAVEN_PASSWORD) {
+			maven {
+				url 'https://maven.patchworkmc.net/releases'
+				credentials {
+					username "patchworkmc"
+					password ENV.MAVEN_PASSWORD
+				}
 			}
 		}
 	}
